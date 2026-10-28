@@ -1,0 +1,32 @@
+# Alert PROPOSAL (loaded by the optional local Prometheus; no Alertmanager wired up).
+groups:
+  - name: apex-ops-api
+    rules:
+      - alert: ApiDown
+        expr: up{job="apex-ops-api"} == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: "API is not being scraped / is down"
+      - alert: DatabaseUnavailable
+        expr: app_db_up == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations:
+          summary: "API cannot reach the database (/ready returns 503)"
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+            / sum(rate(http_requests_total[5m])) > 0.05
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "More than 5% of requests are failing with 5xx"
+      - alert: HighLatencyP95
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5
+        for: 10m
+        labels: {severity: warning}
+        annotations:
+          summary: "p95 latency above 500ms for 10 minutes"

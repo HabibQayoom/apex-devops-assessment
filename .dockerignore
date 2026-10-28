@@ -1,0 +1,11 @@
+.env
+.git
+.github
+.release
+.venv
+__pycache__
+*.pyc
+tests
+docs
+evidence
+local.db
