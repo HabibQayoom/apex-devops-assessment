@@ -1,0 +1,75 @@
+$ scripts/simulate_db_failure.sh stop
+ Container apex-devops-assessment-db-1 Stopping 
+ Container apex-devops-assessment-db-1 Stopped 
+DB stopped. Now follow docs/failure-investigation.md
+[exit 0]
+
+$ curl -sS -i localhost:8000/health
+HTTP/1.1 200 OK
+date: Wed, 28 Oct 2026 19:24:56 GMT
+server: uvicorn
+content-length: 15
+content-type: application/json
+x-request-id: 16bfe810-dcc0-413c-9729-4d705e4abd90
+
+{"status":"ok"}[exit 0]
+
+$ curl -sS -i localhost:8000/ready
+HTTP/1.1 503 Service Unavailable
+date: Wed, 28 Oct 2026 19:24:56 GMT
+server: uvicorn
+content-length: 54
+content-type: application/json
+x-request-id: 7463345c-9aec-4735-b4e6-753915b8295d
+
+{"status":"not_ready","reason":"database unavailable"}[exit 0]
+
+$ docker compose logs --tail=50 api
+api-1  | INFO:     Started server process [1]
+api-1  | INFO:     Waiting for application startup.
+api-1  | {"ts": "2026-10-28T19:24:47.814872+00:00", "level": "INFO", "logger": "apex.api", "message": "database initialised", "status": "ok"}
+api-1  | INFO:     Application startup complete.
+api-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1  | {"ts": "2026-10-28T19:24:48.391085+00:00", "level": "INFO", "logger": "apex.api", "message": "request", "request_id": "b501605f-2d71-4c9a-9964-0f065f456e16", "method": "GET", "path": "/ready", "status": 200, "duration_ms": 3.67}
+api-1  | {"ts": "2026-10-28T19:24:48.565001+00:00", "level": "INFO", "logger": "apex.api", "message": "request", "request_id": "ec9aac6e-7877-482a-8a04-9674e8a9185a", "method": "GET", "path": "/version", "status": 200, "duration_ms": 1.03}
+api-1  | {"ts": "2026-10-28T19:24:48.642825+00:00", "level": "INFO", "logger": "apex.api", "message": "request", "request_id": "0ba5638b-3e4f-4df3-af33-d5c098c7f994", "method": "GET", "path": "/version", "status": 200, "duration_ms": 0.8}
+api-1  | {"ts": "2026-10-28T19:24:48.833427+00:00", "level": "INFO", "logger": "apex.api", "message": "request", "request_id": "f6c9dc33-4e30-4773-aac4-14d7bf509001", "method": "GET", "path": "/operations", "status": 200, "duration_ms": 8.38}
+api-1  | {"ts": "2026-10-28T19:25:03.920286+00:00", "level": "ERROR", "logger": "apex.api", "message": "database unavailable", "error": "db_unavailable"}
+api-1  | {"ts": "2026-10-28T19:25:03.922430+00:00", "level": "INFO", "logger": "apex.api", "message": "request", "request_id": "7463345c-9aec-4735-b4e6-753915b8295d", "method": "GET", "path": "/ready", "status": 503, "duration_ms": 3622.33}
+[exit 0]
+
+$ curl -sS localhost:8000/metrics | grep app_db_up
+# HELP app_db_up 1 if the database is reachable, 0 otherwise
+# TYPE app_db_up gauge
+app_db_up 0.0
+[exit 0]
+
+$ scripts/simulate_db_failure.sh start
+ Container apex-devops-assessment-db-1 Starting 
+ Container apex-devops-assessment-db-1 Started 
+DB started. /ready should recover in a few seconds
+[exit 0]
+
+$ for i in $(seq 1 20); do c=$(curl -s -o /dev/null -w "%{http_code}" localhost:8000/ready); echo "attempt $i: /ready -> $c"; [ "$c" = 200 ] && break; sleep 2; done
+attempt 1: /ready -> 200
+[exit 0]
+
+$ curl -sS -i localhost:8000/ready
+HTTP/1.1 200 OK
+date: Wed, 28 Oct 2026 19:25:05 GMT
+server: uvicorn
+content-length: 18
+content-type: application/json
+x-request-id: 9e6a6e68-c189-48db-b138-5d21407fc4b9
+
+{"status":"ready"}[exit 0]
+
+$ curl -sS localhost:8000/metrics | grep app_db_up
+# HELP app_db_up 1 if the database is reachable, 0 otherwise
+# TYPE app_db_up gauge
+app_db_up 1.0
+[exit 0]
+
+$ curl -sS localhost:8000/operations
+[{"id":1,"title":"Patch node","status":"open"}][exit 0]
+

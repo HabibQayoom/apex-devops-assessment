@@ -1,0 +1,88 @@
+$ scripts/release.sh v1.1.0-bad --bad 2>&1 | tail -3
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/cwvbeel2erq0l84arr20utlvk
+Built apex-ops-api:v1.1.0-bad (bad=true)
+[exit 0]
+
+$ scripts/deploy.sh v1.1.0-bad
+>> Deploying v1.1.0-bad (current: v1.0.0)
+ Container apex-devops-assessment-db-1 Running 
+ Container apex-devops-assessment-api-1 Recreate 
+ Container apex-devops-assessment-api-1 Recreated 
+ Container apex-devops-assessment-db-1 Waiting 
+ Container apex-devops-assessment-db-1 Healthy 
+ Container apex-devops-assessment-api-1 Starting 
+ Container apex-devops-assessment-api-1 Started 
+SMOKE TEST FAILED: /ready did not return 200
+>> Deploy FAILED for v1.1.0-bad
+>> Automatic rollback to v1.0.0
+ Container apex-devops-assessment-db-1 Running 
+ Container apex-devops-assessment-api-1 Recreate 
+ Container apex-devops-assessment-api-1 Recreated 
+ Container apex-devops-assessment-db-1 Waiting 
+ Container apex-devops-assessment-db-1 Healthy 
+ Container apex-devops-assessment-api-1 Starting 
+ Container apex-devops-assessment-api-1 Started 
+{"version":"v1.0.0"}
+SMOKE TEST PASSED
+>> Rolled back to v1.0.0
+[exit 1]
+
+$ curl -sS localhost:8000/version
+{"version":"v1.0.0"}[exit 0]
+
+$ echo current=$(cat .release/current) previous=$(cat .release/previous 2>/dev/null || echo none)
+current=v1.0.0 previous=none
+[exit 0]
+
+$ scripts/release.sh v1.1.0 2>&1 | tail -3
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/j415wsi12ef12avqg5ws5mwox
+Built apex-ops-api:v1.1.0 (bad=false)
+[exit 0]
+
+$ scripts/deploy.sh v1.1.0
+>> Deploying v1.1.0 (current: v1.0.0)
+ Container apex-devops-assessment-db-1 Running 
+ Container apex-devops-assessment-api-1 Recreate 
+ Container apex-devops-assessment-api-1 Recreated 
+ Container apex-devops-assessment-db-1 Waiting 
+ Container apex-devops-assessment-db-1 Healthy 
+ Container apex-devops-assessment-api-1 Starting 
+ Container apex-devops-assessment-api-1 Started 
+{"version":"v1.1.0"}
+SMOKE TEST PASSED
+>> Deploy OK: v1.1.0 is live
+[exit 0]
+
+$ curl -sS localhost:8000/version
+{"version":"v1.1.0"}[exit 0]
+
+$ echo current=$(cat .release/current) previous=$(cat .release/previous)
+current=v1.1.0 previous=v1.0.0
+[exit 0]
+
+$ scripts/rollback.sh
+>> Rolling back v1.1.0 -> v1.0.0
+ Container apex-devops-assessment-db-1 Running 
+ Container apex-devops-assessment-api-1 Recreate 
+ Container apex-devops-assessment-api-1 Recreated 
+ Container apex-devops-assessment-db-1 Waiting 
+ Container apex-devops-assessment-db-1 Healthy 
+ Container apex-devops-assessment-api-1 Starting 
+ Container apex-devops-assessment-api-1 Started 
+{"version":"v1.0.0"}
+SMOKE TEST PASSED
+>> Rollback complete: v1.0.0 is live
+[exit 0]
+
+$ curl -sS localhost:8000/version
+{"version":"v1.0.0"}[exit 0]
+
+$ echo current=$(cat .release/current) previous=$(cat .release/previous)
+current=v1.0.0 previous=v1.1.0
+[exit 0]
+
+$ curl -sS localhost:8000/operations
+[{"id":1,"title":"Patch node","status":"open"}][exit 0]
+

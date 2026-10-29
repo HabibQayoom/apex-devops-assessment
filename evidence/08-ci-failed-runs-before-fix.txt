@@ -1,0 +1,99 @@
+### Failed run 1: 40753301190 (trivy-action@0.28.0 tag not found)
+$ gh run view 40753301190
+
+X main CI · 40753301190
+Triggered via push about 17 hours ago
+
+JOBS
+✓ Lint, test, dependency audit in 30s (ID 123045433383)
+X Build and scan image in 3s (ID 123045726143)
+  X Set up job
+- Deploy (local Compose smoke deployment) in 0s (ID 123045802280)
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Lint, test, dependency audit: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+Lint, test, dependency audit: .github#1
+
+X Unable to resolve action `aquasecurity/trivy-action@0.28.0`, unable to find version `0.28.0`
+Build and scan image: .github#31
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+Build and scan image: .github#1
+
+
+To see what failed, try: gh run view 40753301190 --log-failed
+View this run on GitHub: https://github.com/HabibQayoom/apex-devops-assessment/actions/runs/40753301190
+$ gh run view 40753301190 --log-failed | grep error
+Build and scan image	Set up job	2026-10-28T19:20:19.6663021Z ##[error]Unable to resolve action `aquasecurity/trivy-action@0.28.0`, unable to find version `0.28.0`
+
+### Failed run 2: 40871343319 (setup-trivy@v0.2.1 tag not found)
+$ gh run list --limit 5  (captured right after run 2)
+completed	failure	Fix trivy-action version tag	CI	main	push	40871343319	28s	2026-10-29T12:12:18Z
+completed	failure	Initial commit: Apex Ops API, Docker, CI, docs	CI	main	push	40753301190	42s	2026-10-28T19:19:43Z
+
+$ gh run view 40871343319
+
+X main CI · 40871343319
+Triggered via push less than a minute ago
+
+JOBS
+✓ Lint, test, dependency audit in 20s (ID 123438894940)
+X Build and scan image in 2s (ID 123439063750)
+  X Set up job
+- Deploy (local Compose smoke deployment) (ID 123439100362)
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Lint, test, dependency audit: .github#2
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+Lint, test, dependency audit: .github#1
+
+X Unable to resolve action `aquasecurity/setup-trivy@v0.2.1`, unable to find version `v0.2.1`
+Build and scan image: .github#34
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+Build and scan image: .github#1
+
+
+To see what failed, try: gh run view 40871343319 --log-failed
+View this run on GitHub: https://github.com/HabibQayoom/apex-devops-assessment/actions/runs/40871343319
+
+$ gh run view 40871343319 --log-failed
+Build and scan image	Set up job	﻿2026-10-29T12:12:43.8389994Z Current runner version: '2.338.0'
+Build and scan image	Set up job	2026-10-29T12:12:43.8418441Z ##[group]Runner Image Provisioner
+Build and scan image	Set up job	2026-10-29T12:12:43.8419409Z Hosted Compute Agent
+Build and scan image	Set up job	2026-10-29T12:12:43.8420047Z Version: 20261021.618
+Build and scan image	Set up job	2026-10-29T12:12:43.8420704Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+Build and scan image	Set up job	2026-10-29T12:12:43.8421555Z Build Date: 2026-10-21T00:45:21Z
+Build and scan image	Set up job	2026-10-29T12:12:43.8422304Z Worker ID: {6d179a15-991e-446e-a47a-22c8792ad230}
+Build and scan image	Set up job	2026-10-29T12:12:43.8423082Z Region: northcentralus
+Build and scan image	Set up job	2026-10-29T12:12:43.8423716Z Cloud: Azure
+Build and scan image	Set up job	2026-10-29T12:12:43.8424331Z ##[endgroup]
+Build and scan image	Set up job	2026-10-29T12:12:43.8425934Z ##[group]Operating System
+Build and scan image	Set up job	2026-10-29T12:12:43.8426617Z Ubuntu
+Build and scan image	Set up job	2026-10-29T12:12:43.8427165Z 26.04.1
+Build and scan image	Set up job	2026-10-29T12:12:43.8427921Z LTS
+Build and scan image	Set up job	2026-10-29T12:12:43.8428473Z ##[endgroup]
+Build and scan image	Set up job	2026-10-29T12:12:43.8429129Z ##[group]Runner Image
+Build and scan image	Set up job	2026-10-29T12:12:43.8429819Z Image: ubuntu-26.04
+Build and scan image	Set up job	2026-10-29T12:12:43.8430398Z Version: 20261025.179.1
+Build and scan image	Set up job	2026-10-29T12:12:43.8431552Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261025.179/images/ubuntu/Ubuntu2604-Readme.md
+Build and scan image	Set up job	2026-10-29T12:12:43.8433503Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261025.179
+Build and scan image	Set up job	2026-10-29T12:12:43.8434555Z ##[endgroup]
+Build and scan image	Set up job	2026-10-29T12:12:43.8436074Z ##[group]GITHUB_TOKEN Permissions
+Build and scan image	Set up job	2026-10-29T12:12:43.8438681Z Contents: read
+Build and scan image	Set up job	2026-10-29T12:12:43.8439342Z Metadata: read
+Build and scan image	Set up job	2026-10-29T12:12:43.8440039Z ##[endgroup]
+Build and scan image	Set up job	2026-10-29T12:12:43.8442162Z Secret source: Actions
+Build and scan image	Set up job	2026-10-29T12:12:43.8443239Z Cache mode: write
+Build and scan image	Set up job	2026-10-29T12:12:43.8444191Z Prepare workflow directory
+Build and scan image	Set up job	2026-10-29T12:12:43.8843553Z Prepare all required actions
+Build and scan image	Set up job	2026-10-29T12:12:43.8913771Z Getting action download info
+Build and scan image	Set up job	2026-10-29T12:12:44.1140879Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+Build and scan image	Set up job	2026-10-29T12:12:44.2459832Z Download action repository 'aquasecurity/trivy-action@v0.28.0' (SHA:915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2)
+Build and scan image	Set up job	2026-10-29T12:12:44.6475513Z Getting action download info
+Build and scan image	Set up job	2026-10-29T12:12:44.7691000Z ##[error]Unable to resolve action `aquasecurity/setup-trivy@v0.2.1`, unable to find version `v0.2.1`

@@ -1,0 +1,36 @@
+$ ruff check .
+All checks passed!
+
+$ pytest -v
+============================= test session starts =============================
+platform win32 -- Python 3.13.11, pytest-8.3.4, pluggy-1.7.0
+rootdir: C:\Users\habib_8dgp99k\Work\apex-devops-assessment
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.11.0, cov-6.0.0
+collected 16 items
+
+tests\test_api.py ...........                                            [ 68%]
+tests\test_intentional_failure.py s                                      [ 75%]
+tests\test_repo_hygiene.py ....                                          [100%]
+
+============================== warnings summary ===============================
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\habib_8dgp99k\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+---------- coverage: platform win32, python 3.13.11-final-0 ----------
+Name                    Stmts   Miss  Cover   Missing
+-----------------------------------------------------
+app\__init__.py             0      0   100%
+app\config.py              10      0   100%
+app\db.py                  24      3    88%   30, 39-40
+app\logging_config.py      21      1    95%   22
+app\main.py               110      5    95%   50-55, 138, 144
+app\metrics.py              4      0   100%
+-----------------------------------------------------
+TOTAL                     169      9    95%
+
+================== 15 passed, 1 skipped, 1 warning in 0.89s ===================

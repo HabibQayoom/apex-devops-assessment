@@ -1,0 +1,50 @@
+$ cat .release/current
+v1.0.0
+[exit 0]
+
+$ docker compose down
+ Container apex-devops-assessment-api-1 Stopping 
+ Container apex-devops-assessment-api-1 Stopped 
+ Container apex-devops-assessment-api-1 Removing 
+ Container apex-devops-assessment-api-1 Removed 
+ Container apex-devops-assessment-db-1 Stopping 
+ Container apex-devops-assessment-db-1 Stopped 
+ Container apex-devops-assessment-db-1 Removing 
+ Container apex-devops-assessment-db-1 Removed 
+ Network apex-devops-assessment_backend Removing 
+ Network apex-devops-assessment_backend Removed 
+[exit 0]
+
+$ export APP_TAG=$(cat .release/current); docker compose up -d --no-build
+ Network apex-devops-assessment_backend Creating 
+ Network apex-devops-assessment_backend Created 
+ Container apex-devops-assessment-db-1 Creating 
+ Container apex-devops-assessment-db-1 Created 
+ Container apex-devops-assessment-api-1 Creating 
+ Container apex-devops-assessment-api-1 Created 
+ Container apex-devops-assessment-db-1 Starting 
+ Container apex-devops-assessment-db-1 Started 
+ Container apex-devops-assessment-db-1 Waiting 
+ Container apex-devops-assessment-db-1 Healthy 
+ Container apex-devops-assessment-api-1 Starting 
+ Container apex-devops-assessment-api-1 Started 
+[exit 0]
+
+$ BASE_URL=http://localhost:8000 scripts/smoke_test.sh
+{"version":"v1.0.0"}
+SMOKE TEST PASSED
+[exit 0]
+
+$ curl -sS localhost:8000/operations
+[{"id":1,"title":"Patch node","status":"open"}][exit 0]
+
+$ docker compose exec api id
+uid=10001(appuser) gid=10001(appuser) groups=10001(appuser)
+[exit 0]
+
+$ docker compose ps
+NAME                           IMAGE                 COMMAND                  SERVICE   CREATED          STATUS                            PORTS
+apex-devops-assessment-api-1   apex-ops-api:v1.0.0   "uvicorn app.main:ap…"   api       8 seconds ago    Up 3 seconds (health: starting)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+apex-devops-assessment-db-1    postgres:16-alpine    "docker-entrypoint.s…"   db        11 seconds ago   Up 9 seconds (healthy)            5432/tcp
+[exit 0]
+

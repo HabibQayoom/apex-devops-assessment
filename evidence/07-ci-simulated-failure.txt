@@ -1,0 +1,57 @@
+$ gh workflow run ci.yml -f simulate_failure=true
+https://github.com/HabibQayoom/apex-devops-assessment/actions/runs/40873668605
+
+$ gh run list --limit 5
+completed	failure	CI	CI	main	workflow_dispatch	40873668605	31s	2026-10-29T12:29:26Z
+completed	success	Update trivy-action to v0.36.0	CI	main	push	40873354218	1m43s	2026-10-29T12:27:06Z
+completed	failure	Fix trivy-action version tag	CI	main	push	40871343319	28s	2026-10-29T12:12:18Z
+completed	failure	Initial commit: Apex Ops API, Docker, CI, docs	CI	main	push	40753301190	42s	2026-10-28T19:19:43Z
+
+$ gh run view 40873668605
+
+X main CI · 40873668605
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+X Lint, test, dependency audit in 27s (ID 123446899111)
+  ✓ Set up job
+  ✓ Run actions/checkout@v4
+  ✓ Run actions/setup-python@v5
+  ✓ Install dependencies
+  ✓ Lint (ruff)
+  ✓ Dependency audit (pip-audit)
+  X Unit tests
+  - Post Run actions/setup-python@v5
+  ✓ Post Run actions/checkout@v4
+  ✓ Complete job
+- Build and scan image (ID 123447132386)
+- Deploy (local Compose smoke deployment) (ID 123447132440)
+
+ANNOTATIONS
+! Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Lint, test, dependency audit: .github#2
+
+X Process completed with exit code 1.
+Lint, test, dependency audit: .github#61
+
+- "The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
+Lint, test, dependency audit: .github#1
+
+
+To see what failed, try: gh run view 40873668605 --log-failed
+View this run on GitHub: https://github.com/HabibQayoom/apex-devops-assessment/actions/runs/40873668605
+
+$ gh run view 40873668605 --log-failed (test summary)
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7286049Z tests/test_intentional_failure.py F                                      [ 75%]
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7580490Z ____________________ test_intentional_failure_blocks_deploy ____________________
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7583652Z     def test_intentional_failure_blocks_deploy():
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7584234Z >       assert 1 == 2, "Intentional failure: deployment must be blocked"
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7584900Z E       AssertionError: Intentional failure: deployment must be blocked
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7585826Z tests/test_intentional_failure.py:16: AssertionError
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7596732Z FAILED tests/test_intentional_failure.py::test_intentional_failure_blocks_deploy - AssertionError: Intentional failure: deployment must be blocked
+Lint, test, dependency audit	Unit tests	2026-10-29T12:29:54.7597792Z =================== 1 failed, 15 passed, 1 warning in 0.44s ====================
+
+$ gh run view 40873668605 --json jobs --jq '.jobs[] | .name + ": " + .conclusion'
+Lint, test, dependency audit: failure
+Build and scan image: skipped
+Deploy (local Compose smoke deployment): skipped
